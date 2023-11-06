@@ -2,14 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Guess My Number</title>
   </head>
   <body>
-    <div id="app">
-      <div class="target">Hi</div>
+    <header class="header">
+      <h1>Guess My Number</h1>
+      <div class="number-display">??</div>
+    </header>
+
+    <div class="interactive">
+      <input
+        type="number"
+        name="user-input"
+        class="interactive__user-input"
+        placeholder="Your Guess"
+      />
+      <button class="interactive__check-btn btn">Check</button>
+      <button class="interactive__reset-btn btn">Reset</button>
     </div>
+
+    <div class="info">
+      <div class="info__feedback">Waiting for your first guess...</div>
+      <div class="info__current-score">20</div>
+      <div class="info__highscore">No game data</div>
+    </div>
+
     <script type="module" src="/main.js"></script>
   </body>
 </html>

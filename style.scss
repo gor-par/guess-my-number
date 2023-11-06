@@ -1,4 +1,43 @@
-.target {
-  background-color: red;
-  color: white;
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr [main-start] repeat(2, 3fr) [main-end] 1fr;
+  grid-template-rows: 15rem 30rem;
+  grid-template-areas: ". head head ." ". interactive info .";
+  & > * {
+    border: 1px solid black;
+  }
+
+  .header {
+    grid-area: head;
+    justify-self: center;
+    align-self: end;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+
+    .number-display {
+      font-size: 4rem;
+      text-align: center;
+    }
+  }
+
+  .interactive {
+    grid-area: interactive;
+  }
+
+  .info {
+    grid-area: info;
+  }
 }
