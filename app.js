@@ -44,6 +44,10 @@ export class App {
     this.ui.feedback = document.querySelector(".info__feedback");
     this.ui.currentScore = document.querySelector(".info__current-score");
     this.ui.highscore = document.querySelector(".info__highscore");
+
+    this.ui.numberDisplay = document.querySelector(".number-display");
+
+    this.ui.body = document.body;
   }
 
   feedback(string) {
@@ -80,21 +84,30 @@ export class App {
 
   wonGame() {
     this.feedback("win");
+    this.ui.body.className = "won";
     this.updateHighscore();
+    this.ui.numberDisplay.textContent = this.target;
   }
 
   lostGame() {
-    this.feedback("lost");
+    this.feedback("lose");
+    this.ui.body.className = "lost";
+    this.ui.numberDisplay.textContent = this.target;
   }
 
   resetGame() {
     this.feedback("start");
+    this.ui.body.className = "";
     this.target = this.generateNumber();
+    console.log(this.target);
     this.attempts = this.rules.attempts;
+    this.refreshHighcore();
+    this.ui.numberDisplay.textContent = "??";
   }
 
   check() {
     const guess = +this.ui.userInput.value;
+
     if (this.attempts < 1) {
       this.lostGame();
     } else if (guess == this.target) {
@@ -111,8 +124,12 @@ export class App {
   updateHighscore() {
     if (this.attempts > this.highscore) {
       this.highscore = this.attempts;
-      this.ui.highscore.textContent = this.highscore;
+      this.refreshHighcore();
     }
+  }
+
+  refreshHighcore() {
+    this.ui.highscore.textContent = this.highscore;
   }
 
   generateNumber() {

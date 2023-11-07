@@ -8,6 +8,10 @@
   <body>
     <header class="header">
       <h1>Guess My Number</h1>
+      <p class="description">
+        Rules are simple: I think of a number between 1 and 20, and you try to
+        guess it!
+      </p>
       <div class="number-display">??</div>
     </header>
 
@@ -24,8 +28,8 @@
 
     <div class="info">
       <div class="info__feedback">Waiting for your first guess...</div>
-      <div class="info__current-score"></div>
-      <div class="info__highscore">No game data</div>
+      <div>Remaining attempts: <span class="info__current-score"></span></div>
+      <div>Highscore: <span class="info__highscore">No game data</span></div>
     </div>
 
     <script type="module" src="/main.js"></script>
