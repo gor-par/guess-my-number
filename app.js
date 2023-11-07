@@ -1,12 +1,36 @@
 export class App {
   ui = {};
 
-  constructor() {
+  get highscore() {
+    return localStorage.getItem("highscore")
+      ? +localStorage.getItem("highscore")
+      : 0;
+  }
+
+  set highscore(v) {
+    localStorage.setItem("highscore", v);
+  }
+
+  get attempts() {
+    return this.__attempts;
+  }
+
+  set attempts(v) {
+    this.__attempts = v;
+    this.ui.currentScore.textContent = this.attempts;
+  }
+
+  constructor(rules) {
     this.setUI();
-    this.restartListen(this.ui.resetBtn);
-    this.checkListen(this.ui.checkBtn);
-    console.log(this.ui);
-    console.log(this.feedback);
+    this.rules = rules
+      ? rules
+      : {
+          // default settings
+          min: 1,
+          max: 20,
+          attempts: 10,
+        };
+    this.resetGame();
   }
 
   setUI() {
@@ -14,23 +38,28 @@ export class App {
     this.ui.checkBtn = document.querySelector(".interactive__check-btn");
     this.ui.userInput = document.querySelector(".interactive__user-input");
 
-    this.ui.feedbackEl = document.querySelector(".info__feedback");
+    this.resetListen(this.ui.resetBtn);
+    this.checkListen(this.ui.checkBtn);
+
+    this.ui.feedback = document.querySelector(".info__feedback");
+    this.ui.currentScore = document.querySelector(".info__current-score");
+    this.ui.highscore = document.querySelector(".info__highscore");
   }
 
   feedback(string) {
     let message = "";
     switch (string) {
       case "win":
-        message = "Wow, you're right!!";
+        message = "Wow, you're right!! Wanna try again?";
         break;
       case "lose":
-        message = "Sorry, you lost";
+        message = "Sorry, you lost. Wanna try again?";
         break;
       case "low":
-        message = "Too low!";
+        message = "Pick higher!";
         break;
       case "high":
-        message = "Too high!";
+        message = "Pick lower!";
         break;
       case "start":
         message = "Waiting for your first guess...";
@@ -38,10 +67,10 @@ export class App {
       default:
         message = "There is some error on our side, sorry!";
     }
-    this.ui.feedbackEl.textContent = message;
+    this.ui.feedback.textContent = message;
   }
 
-  restartListen(btn) {
+  resetListen(btn) {
     btn.addEventListener("click", () => this.resetGame());
   }
 
@@ -49,11 +78,51 @@ export class App {
     btn.addEventListener("click", () => this.check());
   }
 
+  wonGame() {
+    this.feedback("win");
+    this.updateHighscore();
+  }
+
+  lostGame() {
+    this.feedback("lost");
+  }
+
   resetGame() {
     this.feedback("start");
+    this.target = this.generateNumber();
+    this.attempts = this.rules.attempts;
   }
 
   check() {
-    console.log(this.ui.userInput.value);
+    const guess = +this.ui.userInput.value;
+    if (this.attempts < 1) {
+      this.lostGame();
+    } else if (guess == this.target) {
+      this.wonGame();
+    } else if (guess < this.target) {
+      this.feedback("low");
+      this.attempts--;
+    } else if (guess > this.target) {
+      this.feedback("high");
+      this.attempts--;
+    }
+  }
+
+  updateHighscore() {
+    if (this.attempts > this.highscore) {
+      this.highscore = this.attempts;
+      this.ui.highscore.textContent = this.highscore;
+    }
+  }
+
+  generateNumber() {
+    // not sure whether it works for min != 1 or not
+    return (
+      Math.floor(
+        Math.random() * (this.rules.max - this.rules.min + 1) +
+          this.rules.min -
+          1
+      ) + 1
+    );
   }
 }
